@@ -29,9 +29,7 @@ const tpl = `
 	<meta http-equiv="expires" content="0" />
 	<meta http-equiv="pragma" content="no-cache" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>
-    {{.title}}
-    </title>
+    <title>mou</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/static/styles/bulma.min.css">
     <link rel="stylesheet" href="/static/styles/font-awesome.min.css">
