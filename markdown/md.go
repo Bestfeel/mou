@@ -168,7 +168,7 @@ func markdown(in io.Reader, out io.Writer) error {
 }
 
 func handleServerMarkdown(w http.ResponseWriter, r *http.Request) {
-
+	handleFuncHttp(w, r)
 	var code = 200
 	var err error
 	defer func() {
@@ -219,6 +219,36 @@ func handleServerMarkdown(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func hasSuffix(url string, prefix []string) bool {
+
+	for _, p := range prefix {
+		if strings.HasSuffix(url, p) {
+			return true
+		}
+	}
+	return false
+}
+
+func handleFuncHttp(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Add("Access-Control-Allow-Origin", "*")
+
+	if hasSuffix(r.URL.Path, []string{".jpg", ".css", ".png", ".png", ".js", ".gif"}) {
+		w.Header().Add("Cache-Control", "public, max-age=604800, must-revalidate")
+	} else {
+		w.Header().Add("Cache-Control", "no-cache, no-store, must-revalidate")
+		w.Header().Add("Pragma", "no-cache")
+		w.Header().Add("Expires", "0")
+	}
+
+}
+
+func handleProxy(h http.Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		handleFuncHttp(w, r)
+		h.ServeHTTP(w, r)
+	}
+}
 func RunMarkDownServer(args ...string) {
 
 	globalAddr, globalPath = args[0], args[1]
@@ -234,7 +264,7 @@ func RunMarkDownServer(args ...string) {
 	path := filepath.Join(globalPath, ".")
 	files, _ := WalkDir(path)
 	tilteFiles = files
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(&fs)))
+	http.HandleFunc("/static/", handleProxy(http.StripPrefix("/static/", http.FileServer(&fs))))
 	http.HandleFunc("/", handleServerMarkdown)
 
 	log.Fatal(http.ListenAndServe(globalAddr, nil))
