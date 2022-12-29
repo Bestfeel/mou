@@ -2,7 +2,7 @@
 =======================
 
 ```
-go  get  -u  github.com/Bestfeel/mou
+go install github.com/Bestfeel/mou@latest
 ```
 
 开源有很多类似的文档工具,但是都需要遵循一定的格式规范。使用起来还是太麻烦了。
@@ -26,8 +26,7 @@ Flags:
 
 ### 效果图如下:
 
-
-![img](img/img.png)
+![](https://p.ipic.vip/w4iyug.png)
 
 
 

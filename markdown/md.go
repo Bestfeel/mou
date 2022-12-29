@@ -1,21 +1,22 @@
 package markdown
 
 import (
+	"encoding/base64"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"text/template"
-	md "github.com/russross/blackfriday"
-	"fmt"
-	"encoding/base64"
-	"github.com/elazarl/go-bindata-assetfs"
+
 	"github.com/Bestfeel/mou/asset"
-	"gopkg.in/russross/blackfriday.v2"
-	"path"
+	assetfs "github.com/elazarl/go-bindata-assetfs"
+	md "github.com/russross/blackfriday"
+	"github.com/russross/blackfriday/v2"
 )
 
 const tpl = `
@@ -192,7 +193,7 @@ func handleServerMarkdown(w http.ResponseWriter, r *http.Request) {
 		dec := base64.NewDecoder(base64.StdEncoding, strings.NewReader(ICO[i+1:]))
 		io.Copy(w, dec)
 		return
-	} else if (r.URL.Path == "/" || r.URL.Path == "/index.html" ) && len(tilteFiles) > 0 {
+	} else if (r.URL.Path == "/" || r.URL.Path == "/index.html") && len(tilteFiles) > 0 {
 		file = filepath.Join(globalPath, tilteFiles[0].Path)
 	} else {
 		file = filepath.Join(globalPath, r.URL.Path)
